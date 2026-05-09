@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HealthOptimizer AI — 지금 내 몸에 맞는 건강 솔루션</title>
+<style>
+  :root {
+    --green: #00C896;
+    --green-dark: #00A878;
+    --green-light: #E6FBF5;
+    --navy: #0F1F3D;
+    --navy-mid: #1E3A5F;
+    --gray: #6B7280;
+    --gray-light: #F3F4F6;
+    --white: #FFFFFF;
+    --radius: 16px;
+    --shadow: 0 4px 24px rgba(0,0,0,0.08);
+    --shadow-lg: 0 12px 48px rgba(0,0,0,0.14);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: var(--navy); background: var(--white); }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 5%; height: 68px;
+    background: rgba(255,255,255,0.92); backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+  }
+  .logo { display: flex; align-items: center; gap: 10px; font-size: 1.2rem; font-weight: 800; color: var(--navy); text-decoration: none; }
+  .logo-icon { width: 36px; height: 36px; background: linear-gradient(135deg, var(--green), #00A8FF); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; }
+  .nav-links { display: flex; gap: 32px; list-style: none; }
+  .nav-links a { text-decoration: none; color: var(--gray); font-size: 0.9rem; font-weight: 500; transition: color .2s; }
+  .nav-links a:hover { color: var(--green); }
+  .nav-cta { display: flex; gap: 12px; align-items: center; }
+  .btn { padding: 10px 22px; border-radius: 50px; font-size: 0.9rem; font-weight: 600; cursor: pointer; border: none; transition: all .2s; text-decoration: none; }
+  .btn-ghost { background: transparent; color: var(--navy); border: 1.5px solid #E5E7EB; }
+  .btn-ghost:hover { border-color: var(--green); color: var(--green); }
+  .btn-primary { background: var(--green); color: white; }
+  .btn-primary:hover { background: var(--green-dark); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(0,200,150,0.35); }
+  .btn-large { padding: 16px 36px; font-size: 1rem; border-radius: 50px; }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh; display: flex; align-items: center;
+    background: linear-gradient(160deg, #F0FDF9 0%, #EFF6FF 60%, #F5F3FF 100%);
+    padding: 100px 5% 60px;
+    gap: 60px;
+  }
+  .hero-text { flex: 1; max-width: 560px; }
+  .hero-badge { display: inline-flex; align-items: center; gap: 8px; background: var(--green-light); color: var(--green-dark); padding: 6px 16px; border-radius: 50px; font-size: 0.82rem; font-weight: 600; margin-bottom: 24px; }
+  .hero-badge span { width: 6px; height: 6px; background: var(--green); border-radius: 50%; animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(1.4)} }
+  .hero h1 { font-size: clamp(2rem, 4vw, 3.2rem); font-weight: 900; line-height: 1.18; letter-spacing: -0.03em; margin-bottom: 20px; }
+  .hero h1 em { font-style: normal; color: var(--green); }
+  .hero p { font-size: 1.05rem; color: var(--gray); line-height: 1.75; margin-bottom: 36px; }
+  .hero-actions { display: flex; gap: 14px; flex-wrap: wrap; align-items: center; }
+  .hero-sub { font-size: 0.82rem; color: var(--gray); margin-top: 18px; }
+  .hero-stats { display: flex; gap: 32px; margin-top: 40px; padding-top: 32px; border-top: 1px solid rgba(0,0,0,0.07); }
+  .stat-item { display: flex; flex-direction: column; }
+  .stat-num { font-size: 1.6rem; font-weight: 800; color: var(--navy); }
+  .stat-label { font-size: 0.78rem; color: var(--gray); margin-top: 2px; }
+
+  /* ── PHONE MOCKUP ── */
+  .hero-visual { flex: 1; display: flex; justify-content: center; align-items: center; position: relative; }
+  .phone-wrap { position: relative; }
+  .phone {
+    width: 290px; background: var(--navy); border-radius: 44px;
+    padding: 14px; box-shadow: 0 40px 80px rgba(15,31,61,0.35), 0 0 0 1px rgba(255,255,255,0.1);
+    position: relative; z-index: 2;
+  }
+  .phone-screen { background: #111827; border-radius: 34px; overflow: hidden; }
+  .phone-status { background: #111827; padding: 14px 20px 8px; display: flex; justify-content: space-between; align-items: center; }
+  .phone-time { color: white; font-size: 0.75rem; font-weight: 600; }
+  .phone-icons { color: white; font-size: 0.65rem; }
+  .app-header { background: linear-gradient(135deg, #0F1F3D, #1E3A5F); padding: 18px 20px 22px; }
+  .app-greeting { color: rgba(255,255,255,0.65); font-size: 0.72rem; margin-bottom: 2px; }
+  .app-title { color: white; font-size: 1rem; font-weight: 700; margin-bottom: 14px; }
+  .score-ring { display: flex; align-items: center; gap: 14px; }
+  .ring-svg { width: 64px; height: 64px; }
+  .ring-text { color: white; }
+  .ring-num { font-size: 1.5rem; font-weight: 900; }
+  .ring-label { font-size: 0.68rem; color: rgba(255,255,255,0.6); }
+  .metrics-row { display: flex; gap: 8px; margin-top: 8px; }
+  .metric-pill { background: rgba(255,255,255,0.12); border-radius: 20px; padding: 6px 10px; display: flex; align-items: center; gap: 5px; }
+  .metric-pill span:first-child { font-size: 0.75rem; }
+  .metric-pill span:last-child { color: white; font-size: 0.7rem; font-weight: 600; }
+
+  .app-body { background: #F9FAFB; padding: 14px; }
+  .daily-brief { background: white; border-radius: 14px; padding: 14px; margin-bottom: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+  .brief-label { font-size: 0.65rem; font-weight: 700; color: var(--green); text-transform: uppercase; letter-spacing: .05em; margin-bottom: 6px; }
+  .brief-text { font-size: 0.72rem; color: #374151; line-height: 1.5; }
+  .rec-card { background: white; border-radius: 14px; padding: 12px 14px; margin-bottom: 8px; display: flex; align-items: center; gap: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+  .rec-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0; }
+  .rec-icon.exercise { background: #EFF6FF; }
+  .rec-icon.food { background: #FFF7ED; }
+  .rec-icon.sleep { background: #F5F3FF; }
+  .rec-info { flex: 1; }
+  .rec-title { font-size: 0.72rem; font-weight: 700; color: #111827; margin-bottom: 2px; }
+  .rec-sub { font-size: 0.65rem; color: #9CA3AF; }
+  .rec-badge { background: var(--green-light); color: var(--green-dark); font-size: 0.6rem; font-weight: 700; padding: 3px 8px; border-radius: 20px; }
+
+  /* floating cards */
+  .float-card {
+    position: absolute; background: white; border-radius: 14px; padding: 10px 14px;
+    box-shadow: var(--shadow-lg); display: flex; align-items: center; gap: 10px;
+    animation: float 4s ease-in-out infinite;
+    white-space: nowrap;
+  }
+  .float-card.left { left: -110px; top: 30%; animation-delay: 0s; }
+  .float-card.right { right: -100px; top: 60%; animation-delay: 2s; }
+  @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+  .float-icon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1rem; }
+  .float-icon.hrv { background: #FEF3C7; }
+  .float-icon.sleep { background: #EDE9FE; }
+  .float-text-label { font-size: 0.65rem; color: var(--gray); }
+  .float-text-val { font-size: 0.82rem; font-weight: 700; color: var(--navy); }
+
+  /* ── SECTION BASE ── */
+  section { padding: 96px 5%; }
+  .section-label { font-size: 0.82rem; font-weight: 700; color: var(--green); text-transform: uppercase; letter-spacing: .1em; margin-bottom: 12px; }
+  .section-title { font-size: clamp(1.7rem, 3vw, 2.4rem); font-weight: 900; line-height: 1.2; letter-spacing: -0.02em; margin-bottom: 16px; }
+  .section-desc { font-size: 1rem; color: var(--gray); line-height: 1.75; max-width: 520px; }
+  .center { text-align: center; }
+  .center .section-desc { margin: 0 auto; }
+
+  /* ── HOW IT WORKS ── */
+  .how { background: var(--navy); color: white; }
+  .how .section-label { color: var(--green); }
+  .how .section-title { color: white; }
+  .how .section-desc { color: rgba(255,255,255,0.6); }
+  .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 32px; margin-top: 60px; }
+  .step { position: relative; padding: 32px; background: rgba(255,255,255,0.06); border-radius: var(--radius); border: 1px solid rgba(255,255,255,0.1); transition: all .3s; }
+  .step:hover { background: rgba(255,255,255,0.1); transform: translateY(-4px); }
+  .step-num { font-size: 3rem; font-weight: 900; color: rgba(0,200,150,0.2); line-height: 1; margin-bottom: 16px; }
+  .step h3 { font-size: 1.05rem; font-weight: 700; color: white; margin-bottom: 10px; }
+  .step p { font-size: 0.88rem; color: rgba(255,255,255,0.55); line-height: 1.65; }
+  .step-arrow { position: absolute; top: 50%; right: -20px; transform: translateY(-50%); color: var(--green); font-size: 1.2rem; z-index: 1; }
+
+  /* ── FEATURES ── */
+  .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin-top: 60px; }
+  .feat-card { background: white; border-radius: var(--radius); padding: 32px; border: 1px solid #E5E7EB; transition: all .3s; position: relative; overflow: hidden; }
+  .feat-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--green), #00A8FF); opacity: 0; transition: opacity .3s; }
+  .feat-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-4px); }
+  .feat-card:hover::before { opacity: 1; }
+  .feat-icon { width: 52px; height: 52px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 18px; }
+  .feat-card h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: 10px; }
+  .feat-card p { font-size: 0.88rem; color: var(--gray); line-height: 1.65; }
+  .feat-tag { display: inline-block; margin-top: 16px; font-size: 0.75rem; font-weight: 600; color: var(--green); background: var(--green-light); padding: 4px 12px; border-radius: 20px; }
+
+  /* ── DAILY BRIEF SECTION ── */
+  .daily-section { background: var(--gray-light); }
+  .daily-inner { display: flex; gap: 60px; align-items: center; }
+  .daily-content { flex: 1; }
+  .brief-demo { flex: 1; max-width: 500px; }
+  .brief-demo-card { background: white; border-radius: 20px; padding: 28px; box-shadow: var(--shadow-lg); }
+  .brief-demo-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+  .brief-demo-title { font-size: 1rem; font-weight: 700; }
+  .brief-date { font-size: 0.8rem; color: var(--gray); }
+  .health-score-bar { display: flex; align-items: center; gap: 16px; background: var(--green-light); border-radius: 14px; padding: 16px 20px; margin-bottom: 20px; }
+  .score-circle { width: 56px; height: 56px; border-radius: 50%; background: conic-gradient(var(--green) 79%, #E5E7EB 0); display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 1rem; color: var(--green-dark); }
+  .score-info h4 { font-size: 1rem; font-weight: 700; color: var(--navy); }
+  .score-info p { font-size: 0.8rem; color: var(--gray); }
+  .metrics-detail { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+  .metric-box { background: #F9FAFB; border-radius: 12px; padding: 14px; }
+  .metric-box-label { font-size: 0.7rem; color: var(--gray); margin-bottom: 4px; }
+  .metric-box-val { font-size: 1.1rem; font-weight: 700; color: var(--navy); }
+  .metric-box-change { font-size: 0.72rem; margin-top: 2px; }
+  .up { color: #10B981; }
+  .down { color: #EF4444; }
+  .ai-message { background: linear-gradient(135deg, #0F1F3D, #1E3A5F); border-radius: 14px; padding: 16px 18px; color: white; }
+  .ai-tag { font-size: 0.68rem; color: var(--green); font-weight: 700; text-transform: uppercase; letter-spacing: .05em; margin-bottom: 6px; }
+  .ai-text { font-size: 0.82rem; line-height: 1.6; color: rgba(255,255,255,0.85); }
+
+  /* ── PRICING ── */
+  .pricing-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 24px; margin-top: 60px; max-width: 1000px; margin-left: auto; margin-right: auto; }
+  .price-card { background: white; border-radius: var(--radius); padding: 32px; border: 2px solid #E5E7EB; transition: all .3s; position: relative; }
+  .price-card.popular { border-color: var(--green); transform: scale(1.04); }
+  .popular-badge { position: absolute; top: -14px; left: 50%; transform: translateX(-50%); background: var(--green); color: white; font-size: 0.72rem; font-weight: 700; padding: 4px 16px; border-radius: 20px; white-space: nowrap; }
+  .price-plan { font-size: 0.82rem; font-weight: 700; color: var(--gray); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 8px; }
+  .price-amount { font-size: 2.2rem; font-weight: 900; color: var(--navy); line-height: 1; }
+  .price-amount span { font-size: 1rem; font-weight: 500; color: var(--gray); }
+  .price-desc { font-size: 0.82rem; color: var(--gray); margin: 10px 0 24px; }
+  .price-features { list-style: none; display: flex; flex-direction: column; gap: 10px; margin-bottom: 28px; }
+  .price-features li { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; color: #374151; }
+  .price-features li::before { content: '✓'; color: var(--green); font-weight: 700; flex-shrink: 0; }
+  .price-features li.muted::before { content: '✗'; color: #D1D5DB; }
+  .price-features li.muted { color: #9CA3AF; }
+  .price-btn { width: 100%; padding: 13px; border-radius: 50px; font-size: 0.9rem; font-weight: 700; cursor: pointer; border: 2px solid var(--green); transition: all .2s; }
+  .price-btn.outline { background: transparent; color: var(--green); }
+  .price-btn.outline:hover { background: var(--green); color: white; }
+  .price-btn.filled { background: var(--green); color: white; }
+  .price-btn.filled:hover { background: var(--green-dark); }
+
+  /* ── TESTIMONIALS ── */
+  .testimonials { background: var(--gray-light); }
+  .testi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; margin-top: 56px; }
+  .testi-card { background: white; border-radius: var(--radius); padding: 28px; box-shadow: var(--shadow); }
+  .testi-stars { color: #F59E0B; font-size: 0.9rem; margin-bottom: 14px; }
+  .testi-text { font-size: 0.9rem; color: #374151; line-height: 1.7; margin-bottom: 20px; font-style: italic; }
+  .testi-author { display: flex; align-items: center; gap: 12px; }
+  .testi-avatar { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; }
+  .testi-name { font-size: 0.88rem; font-weight: 700; color: var(--navy); }
+  .testi-role { font-size: 0.75rem; color: var(--gray); }
+
+  /* ── CTA ── */
+  .cta-section { background: linear-gradient(135deg, var(--navy) 0%, #1E3A5F 100%); text-align: center; padding: 100px 5%; }
+  .cta-section h2 { font-size: clamp(1.8rem, 3.5vw, 2.8rem); font-weight: 900; color: white; margin-bottom: 18px; letter-spacing: -0.02em; }
+  .cta-section p { color: rgba(255,255,255,0.65); font-size: 1rem; margin-bottom: 40px; max-width: 480px; margin-left: auto; margin-right: auto; line-height: 1.7; }
+  .cta-actions { display: flex; justify-content: center; gap: 14px; flex-wrap: wrap; }
+  .btn-white { background: white; color: var(--navy); padding: 16px 36px; border-radius: 50px; font-size: 1rem; font-weight: 700; border: none; cursor: pointer; transition: all .2s; }
+  .btn-white:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(255,255,255,0.2); }
+  .btn-outline-white { background: transparent; color: white; padding: 16px 36px; border-radius: 50px; font-size: 1rem; font-weight: 700; border: 2px solid rgba(255,255,255,0.4); cursor: pointer; transition: all .2s; }
+  .btn-outline-white:hover { border-color: white; background: rgba(255,255,255,0.08); }
+  .app-store-badges { display: flex; justify-content: center; gap: 14px; margin-top: 32px; }
+  .app-badge { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 12px; padding: 10px 20px; display: flex; align-items: center; gap: 8px; color: white; font-size: 0.82rem; cursor: pointer; transition: all .2s; }
+  .app-badge:hover { background: rgba(255,255,255,0.18); }
+  .app-badge-icon { font-size: 1.3rem; }
+
+  /* ── FOOTER ── */
+  footer { background: #060D1A; color: rgba(255,255,255,0.45); padding: 56px 5% 32px; }
+  .footer-inner { display: flex; gap: 60px; margin-bottom: 48px; flex-wrap: wrap; }
+  .footer-brand { flex: 2; min-width: 220px; }
+  .footer-brand .logo { margin-bottom: 14px; display: inline-flex; }
+  .footer-brand p { font-size: 0.85rem; line-height: 1.7; max-width: 260px; }
+  .footer-col { flex: 1; min-width: 140px; }
+  .footer-col h4 { color: white; font-size: 0.85rem; font-weight: 700; margin-bottom: 16px; }
+  .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .footer-col ul li a { color: rgba(255,255,255,0.45); text-decoration: none; font-size: 0.82rem; transition: color .2s; }
+  .footer-col ul li a:hover { color: var(--green); }
+  .footer-bottom { border-top: 1px solid rgba(255,255,255,0.08); padding-top: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: gap; }
+  .footer-bottom p { font-size: 0.78rem; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    .hero { flex-direction: column; text-align: center; padding: 100px 5% 60px; }
+    .hero-stats { justify-content: center; }
+    .hero-actions { justify-content: center; }
+    .float-card { display: none; }
+    .daily-inner { flex-direction: column; }
+    .nav-links { display: none; }
+    .step-arrow { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="logo">
+    <div class="logo-icon">❤️</div>
+    HealthOptimizer AI
+  </a>
+  <ul class="nav-links">
+    <li><a href="#how">작동 원리</a></li>
+    <li><a href="#features">기능</a></li>
+    <li><a href="#pricing">요금제</a></li>
+    <li><a href="#reviews">후기</a></li>
+  </ul>
+  <div class="nav-cta">
+    <a href="#" class="btn btn-ghost">로그인</a>
+    <a href="#" class="btn btn-primary">무료 시작</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-text">
+    <div class="hero-badge"><span></span> AI 건강 코치 · 실시간 분석</div>
+    <h1>지금 <em>내 몸 상태</em>에<br>딱 맞는 건강 솔루션</h1>
+    <p>평균이 아닌 <strong>나의 오늘</strong>을 기준으로 AI가 운동·식단·수면을 최적화합니다. 수면 질, HRV, 활동량을 종합 분석해 매일 아침 맞춤 플랜을 제안해요.</p>
+    <div class="hero-actions">
+      <a href="#" class="btn btn-primary btn-large">무료로 시작하기 →</a>
+      <a href="#how" class="btn btn-ghost btn-large">작동 원리 보기</a>
+    </div>
+    <p class="hero-sub">신용카드 불필요 · 7일 무료체험 · 언제든 해지 가능</p>
+    <div class="hero-stats">
+      <div class="stat-item"><span class="stat-num">94%</span><span class="stat-label">추천 실행률</span></div>
+      <div class="stat-item"><span class="stat-num">+23%</span><span class="stat-label">평균 수면 개선</span></div>
+      <div class="stat-item"><span class="stat-num">10만+</span><span class="stat-label">누적 사용자</span></div>
+    </div>
+  </div>
+
+  <div class="hero-visual">
+    <div class="phone-wrap">
+      <!-- Floating cards -->
+      <div class="float-card left">
+        <div class="float-icon hrv">💛</div>
+        <div>
+          <div class="float-text-label">HRV 지수</div>
+          <div class="float-text-val">68ms ↑ 12%</div>
+        </div>
+      </div>
+      <div class="float-card right">
+        <div class="float-icon sleep">💜</div>
+        <div>
+          <div class="float-text-label">어젯밤 수면</div>
+          <div class="float-text-val">7h 24m · 양호</div>
+        </div>
+      </div>
+
+      <!-- Phone -->
+      <div class="phone">
+        <div class="phone-screen">
+          <div class="phone-status">
+            <span class="phone-time">9:41</span>
+            <span class="phone-icons">▲ ▲ ▌</span>
+          </div>
+          <div class="app-header">
+            <div class="app-greeting">좋은 아침이에요, 지민님 👋</div>
+            <div class="app-title">오늘의 건강 브리핑</div>
+            <div class="score-ring">
+              <svg class="ring-svg" viewBox="0 0 64 64">
+                <circle cx="32" cy="32" r="26" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="7"/>
+                <circle cx="32" cy="32" r="26" fill="none" stroke="#00C896" stroke-width="7"
+                  stroke-dasharray="130 163" stroke-linecap="round" transform="rotate(-90 32 32)"/>
+                <text x="32" y="37" text-anchor="middle" fill="white" font-size="14" font-weight="900">82</text>
+              </svg>
+              <div class="ring-text">
+                <div class="ring-num">건강 점수</div>
+                <div class="ring-label">어제보다 +5점 상승</div>
+              </div>
+            </div>
+            <div class="metrics-row">
+              <div class="metric-pill"><span>😴</span><span>7h 24m</span></div>
+              <div class="metric-pill"><span>💓</span><span>62 bpm</span></div>
+              <div class="metric-pill"><span>🔥</span><span>8,240보</span></div>
+            </div>
+          </div>
+          <div class="app-body">
+            <div class="daily-brief">
+              <div class="brief-label">🤖 AI 분석</div>
+              <div class="brief-text">수면 효율이 회복되었어요. 오늘은 중강도 운동을 추천합니다. 단백질 섭취를 늘려보세요.</div>
+            </div>
+            <div class="rec-card">
+              <div class="rec-icon exercise">🏃</div>
+              <div class="rec-info">
+                <div class="rec-title">조깅 30분</div>
+                <div class="rec-sub">중강도 · 오후 6시 추천</div>
+              </div>
+              <div class="rec-badge">추천</div>
+            </div>
+            <div class="rec-card">
+              <div class="rec-icon food">🥗</div>
+              <div class="rec-info">
+                <div class="rec-title">닭가슴살 샐러드</div>
+                <div class="rec-sub">단백질 +15g 목표</div>
+              </div>
+              <div class="rec-badge">추천</div>
+            </div>
+            <div class="rec-card">
+              <div class="rec-icon sleep">🌙</div>
+              <div class="rec-info">
+                <div class="rec-title">취침 준비 10:30</div>
+                <div class="rec-sub">최적 수면 시간 7h 30m</div>
+              </div>
+              <div class="rec-badge">추천</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how" id="how">
+  <div class="center">
+    <div class="section-label">작동 원리</div>
+    <h2 class="section-title">4단계로 완성되는<br>나만의 건강 최적화</h2>
+    <p class="section-desc">복잡한 설정 없이, 웨어러블을 연결하는 것만으로 AI가 나를 학습하기 시작합니다.</p>
+  </div>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">01</div>
+      <h3>데이터 연동</h3>
+      <p>Apple Health, Galaxy Watch, Garmin 등 기존 웨어러블을 클릭 한 번으로 연결합니다.</p>
+      <div class="step-arrow">→</div>
+    </div>
+    <div class="step">
+      <div class="step-num">02</div>
+      <h3>베이스라인 학습</h3>
+      <p>AI가 7일간 내 수면·활동·심박 패턴을 학습해 '나만의 정상 범위'를 설정합니다.</p>
+      <div class="step-arrow">→</div>
+    </div>
+    <div class="step">
+      <div class="step-num">03</div>
+      <h3>일일 상태 분석</h3>
+      <p>매일 아침, 전날 데이터를 종합 분석해 오늘의 몸 상태를 0~100점으로 진단합니다.</p>
+      <div class="step-arrow">→</div>
+    </div>
+    <div class="step">
+      <div class="step-num">04</div>
+      <h3>맞춤 솔루션 제안</h3>
+      <p>운동·식단·수면 목표를 오늘 컨디션에 맞게 자동 조정하고 실행 가능한 액션을 제시합니다.</p>
+    </div>
+  </div>
+</section>
+
+<!-- DAILY BRIEF SECTION -->
+<section class="daily-section" id="brief">
+  <div class="daily-inner">
+    <div class="daily-content">
+      <div class="section-label">오늘의 브리핑</div>
+      <h2 class="section-title">매일 아침,<br>나를 위한 건강 리포트</h2>
+      <p class="section-desc" style="margin-bottom:28px">어젯밤 수면 데이터부터 심박수 변이도(HRV)까지, 모든 신호를 AI가 해석해 오늘 해야 할 것을 알려줍니다.</p>
+      <ul style="list-style:none;display:flex;flex-direction:column;gap:14px">
+        <li style="display:flex;gap:12px;align-items:flex-start">
+          <span style="font-size:1.3rem;margin-top:2px">🔬</span>
+          <div><strong style="display:block;margin-bottom:3px">개인 기준 비교</strong><span style="font-size:0.88rem;color:var(--gray)">평균값이 아닌 '나의 평소' 대비 오늘 상태를 분석합니다.</span></div>
+        </li>
+        <li style="display:flex;gap:12px;align-items:flex-start">
+          <span style="font-size:1.3rem;margin-top:2px">💬</span>
+          <div><strong style="display:block;margin-bottom:3px">자연어 설명</strong><span style="font-size:0.88rem;color:var(--gray)">숫자가 아닌 이해하기 쉬운 언어로 내 몸 상태를 설명합니다.</span></div>
+        </li>
+        <li style="display:flex;gap:12px;align-items:flex-start">
+          <span style="font-size:1.3rem;margin-top:2px">⚡</span>
+          <div><strong style="display:block;margin-bottom:3px">즉시 실행 액션</strong><span style="font-size:0.88rem;color:var(--gray)">막연한 조언 없이 오늘 당장 실행할 수 있는 구체적인 행동을 제안합니다.</span></div>
+        </li>
+      </ul>
+    </div>
+    <div class="brief-demo">
+      <div class="brief-demo-card">
+        <div class="brief-demo-header">
+          <span class="brief-demo-title">🌅 오늘의 건강 브리핑</span>
+          <span class="brief-date">2026.05.09 (토)</span>
+        </div>
+        <div class="health-score-bar">
+          <div class="score-circle">82</div>
+          <div class="score-info">
+            <h4>컨디션 양호 🟢</h4>
+            <p>어제보다 5점 상승 · 주간 최고</p>
+          </div>
+        </div>
+        <div class="metrics-detail">
+          <div class="metric-box">
+            <div class="metric-box-label">😴 수면 효율</div>
+            <div class="metric-box-val">87%</div>
+            <div class="metric-box-change up">↑ 평소보다 +9%</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-box-label">💓 HRV</div>
+            <div class="metric-box-val">68ms</div>
+            <div class="metric-box-change up">↑ 평소보다 +12%</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-box-label">🔋 안정시 심박</div>
+            <div class="metric-box-val">62 bpm</div>
+            <div class="metric-box-change up">↓ 평소보다 -3bpm</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-box-label">🧠 스트레스</div>
+            <div class="metric-box-val">낮음</div>
+            <div class="metric-box-change up">↓ 어제보다 개선</div>
+          </div>
+        </div>
+        <div class="ai-message">
+          <div class="ai-tag">🤖 AI 코치 분석</div>
+          <div class="ai-text">"수면과 회복 지표가 모두 좋아요. 오늘은 중강도 이상의 운동도 충분히 소화할 수 있습니다. 저녁 조깅 30분을 추천드려요. 단백질 섭취를 목표의 110%로 늘려 근육 회복을 극대화하세요."</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="center">
+    <div class="section-label">핵심 기능</div>
+    <h2 class="section-title">건강의 모든 측면을<br>AI가 통합 관리</h2>
+    <p class="section-desc">운동부터 수면, 영양, 멘탈 웰니스까지. 단편적인 앱이 아닌 하나의 완성된 건강 파트너.</p>
+  </div>
+  <div class="features-grid">
+    <div class="feat-card">
+      <div class="feat-icon" style="background:#EFF6FF">🏋️</div>
+      <h3>맞춤 운동 추천</h3>
+      <p>오늘의 HRV와 수면 회복도를 기반으로 운동 강도와 종류를 실시간 조정합니다. 컨디션이 낮은 날엔 자동으로 가벼운 루틴으로 전환됩니다.</p>
+      <span class="feat-tag">✓ 동영상 가이드 제공</span>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon" style="background:#FFF7ED">🥦</div>
+      <h3>개인화 영양 솔루션</h3>
+      <p>활동량과 회복 상태를 반영해 오늘의 영양 목표를 동적으로 설정합니다. 사진 한 장으로 식사를 기록하면 AI가 자동 분석합니다.</p>
+      <span class="feat-tag">✓ 한식 DB 완비</span>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon" style="background:#F0FDF4">😴</div>
+      <h3>수면 최적화 코칭</h3>
+      <p>개인의 수면 트리거(카페인, 저녁 운동 등)를 파악하고, 최적의 취침 시간과 기상 시간을 제안합니다.</p>
+      <span class="feat-tag">✓ 수면 루틴 알림</span>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon" style="background:#FDF4FF">🧘</div>
+      <h3>스트레스 & 멘탈 웰니스</h3>
+      <p>HRV 데이터로 스트레스를 자동 감지하고 즉각적인 호흡·마음챙김 루틴을 제안합니다. 감정 트래킹 저널도 지원합니다.</p>
+      <span class="feat-tag">✓ 감정 트래킹</span>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon" style="background:#FFF1F2">📊</div>
+      <h3>헬스 트렌드 리포트</h3>
+      <p>주간·월간 건강 변화를 시각화합니다. "이 루틴을 시작한 후 수면 질 +23% 개선" 같은 성과를 직접 확인할 수 있어요.</p>
+      <span class="feat-tag">✓ 의사 공유용 리포트</span>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon" style="background:#F0F9FF">📱</div>
+      <h3>멀티 기기 연동</h3>
+      <p>Apple Watch, Galaxy Watch, Garmin, Oura Ring, WHOOP 등 주요 웨어러블을 모두 통합합니다. 기기가 달라도 데이터는 하나로.</p>
+      <span class="feat-tag">✓ 10+ 기기 지원</span>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing" style="background: var(--gray-light)">
+  <div class="center">
+    <div class="section-label">요금제</div>
+    <h2 class="section-title">나에게 맞는 플랜으로<br>건강을 시작하세요</h2>
+    <p class="section-desc">모든 플랜은 7일 무료 체험으로 시작할 수 있습니다.</p>
+  </div>
+  <div class="pricing-cards">
+    <div class="price-card">
+      <div class="price-plan">Free</div>
+      <div class="price-amount">₩0<span>/월</span></div>
+      <div class="price-desc">기본 기능으로 시작해보세요</div>
+      <ul class="price-features">
+        <li>기본 웨어러블 연동 1기기</li>
+        <li>일간 건강 요약 (3개 지표)</li>
+        <li>주간 리포트</li>
+        <li class="muted">맞춤 운동·식단 추천</li>
+        <li class="muted">AI 코칭 메시지</li>
+        <li class="muted">무제한 지표 분석</li>
+      </ul>
+      <button class="price-btn outline">무료 시작</button>
+    </div>
+    <div class="price-card popular">
+      <div class="popular-badge">🔥 가장 인기</div>
+      <div class="price-plan">Essential</div>
+      <div class="price-amount">₩9,900<span>/월</span></div>
+      <div class="price-desc">개인화 건강 최적화의 시작</div>
+      <ul class="price-features">
+        <li>멀티 기기 연동 무제한</li>
+        <li>전체 지표 분석</li>
+        <li>맞춤 운동·식단 추천</li>
+        <li>AI 코칭 메시지 (일 3회)</li>
+        <li>식사 사진 스캔 분석</li>
+        <li class="muted">전문가 리포트</li>
+      </ul>
+      <button class="price-btn filled">7일 무료 체험</button>
+    </div>
+    <div class="price-card">
+      <div class="price-plan">Premium</div>
+      <div class="price-amount">₩19,900<span>/월</span></div>
+      <div class="price-desc">완전한 AI 건강 파트너십</div>
+      <ul class="price-features">
+        <li>Essential 모든 기능</li>
+        <li>무제한 AI 코칭</li>
+        <li>전문의 공유용 리포트</li>
+        <li>고급 수면 분석</li>
+        <li>우선 고객 지원</li>
+        <li>베타 기능 우선 접근</li>
+      </ul>
+      <button class="price-btn outline">7일 무료 체험</button>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials" id="reviews">
+  <div class="center">
+    <div class="section-label">사용자 후기</div>
+    <h2 class="section-title">실제로 바뀐<br>사람들의 이야기</h2>
+  </div>
+  <div class="testi-grid">
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-text">"운동 앱은 많은데 '오늘 내가 운동해도 되는지'를 알려주는 앱은 처음이에요. HRV가 낮은 날 쉬라고 알려줘서 오히려 퍼포먼스가 올랐습니다."</p>
+      <div class="testi-author">
+        <div class="testi-avatar" style="background:#DBEAFE">👨‍💼</div>
+        <div>
+          <div class="testi-name">김재원 님</div>
+          <div class="testi-role">IT 기획자 · 38세</div>
+        </div>
+      </div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-text">"2개월 사용 후 수면 점수가 62점에서 81점으로 올랐어요. 카페인과 수면 질의 상관관계를 직접 데이터로 보고 나니 오후 2시 이후 커피를 끊게 됐습니다."</p>
+      <div class="testi-author">
+        <div class="testi-avatar" style="background:#FCE7F3">👩‍⚕️</div>
+        <div>
+          <div class="testi-name">박소영 님</div>
+          <div class="testi-role">간호사 · 31세</div>
+        </div>
+      </div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-stars">★★★★☆</div>
+      <p class="testi-text">"50대 중반이라 어떤 운동을 해야 할지 막막했는데, 매일 아침 구체적인 루틴을 알려줘서 정말 편합니다. 병원 갈 때 리포트를 출력해서 가져가니 의사 선생님도 좋아하시더라고요."</p>
+      <div class="testi-author">
+        <div class="testi-avatar" style="background:#D1FAE5">👴</div>
+        <div>
+          <div class="testi-name">이상철 님</div>
+          <div class="testi-role">자영업 · 55세</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <h2>오늘부터 내 몸의<br>언어를 배워보세요</h2>
+  <p>7일 무료 체험으로 시작하세요. 웨어러블 하나면 AI 건강 코치가 바로 활성화됩니다.</p>
+  <div class="cta-actions">
+    <button class="btn-white">무료 체험 시작하기 →</button>
+    <button class="btn-outline-white">데모 보기</button>
+  </div>
+  <div class="app-store-badges">
+    <div class="app-badge"><span class="app-badge-icon">🍎</span><div><div style="font-size:0.65rem;color:rgba(255,255,255,.6)">Download on the</div><div style="font-weight:700;font-size:0.9rem">App Store</div></div></div>
+    <div class="app-badge"><span class="app-badge-icon">▶️</span><div><div style="font-size:0.65rem;color:rgba(255,255,255,.6)">Get it on</div><div style="font-weight:700;font-size:0.9rem">Google Play</div></div></div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <a href="#" class="logo" style="color:white">
+        <div class="logo-icon">❤️</div>
+        HealthOptimizer AI
+      </a>
+      <p style="margin-top:14px">지금 내 몸 상태에 맞는 건강 솔루션을 AI가 제안하는 개인화 건강 최적화 플랫폼</p>
+    </div>
+    <div class="footer-col">
+      <h4>서비스</h4>
+      <ul>
+        <li><a href="#">기능 소개</a></li>
+        <li><a href="#">요금제</a></li>
+        <li><a href="#">기업 솔루션</a></li>
+        <li><a href="#">파트너십</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>지원</h4>
+      <ul>
+        <li><a href="#">고객센터</a></li>
+        <li><a href="#">자주 묻는 질문</a></li>
+        <li><a href="#">연동 기기 목록</a></li>
+        <li><a href="#">커뮤니티</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>회사</h4>
+      <ul>
+        <li><a href="#">소개</a></li>
+        <li><a href="#">블로그</a></li>
+        <li><a href="#">채용</a></li>
+        <li><a href="#">보도자료</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 HealthOptimizer AI. All rights reserved.</p>
+    <p>개인정보처리방침 · 이용약관 · 쿠키 설정</p>
+  </div>
+</footer>
+
+<script>
+  // Smooth active nav highlight
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav-links a');
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(s => {
+      if (window.scrollY >= s.offsetTop - 80) current = s.id;
+    });
+    navLinks.forEach(a => {
+      a.style.color = a.getAttribute('href') === '#' + current ? 'var(--green)' : '';
+    });
+  });
+
+  // Score ring animate on scroll
+  const ring = document.querySelector('.ring-svg circle:last-child');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.style.transition = 'stroke-dasharray 1.2s ease';
+        e.target.style.strokeDasharray = '130 163';
+      }
+    });
+  });
+  if (ring) { ring.style.strokeDasharray = '0 163'; observer.observe(ring); }
+
+  // Feature cards hover glow
+  document.querySelectorAll('.feat-card').forEach(card => {
+    card.addEventListener('mouseenter', () => card.style.borderColor = 'var(--green)');
+    card.addEventListener('mouseleave', () => card.style.borderColor = '#E5E7EB');
+  });
+</script>
+</body>
+</html>
